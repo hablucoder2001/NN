@@ -1,0 +1,121 @@
+from logging import error
+
+import numpy as np
+
+import matplotlib.pyplot as plt
+
+
+
+
+
+def bipolar_step(x):
+
+    return 1 if x >= 0 else -1
+
+
+
+
+
+# Bipolar AND inputs
+
+X = np.array([[-1, -1], [-1, 1], [1, -1], [1, 1]])
+
+
+
+# Bipolar AND targets
+
+T = np.array([-1, -1, -1, 1])
+
+
+
+w = np.zeros(2)
+
+b = 0
+
+lr = 0.1
+
+errors = []
+
+
+
+# Training
+
+for epoch in range(20):
+
+    total_error = 0
+
+    for i in range(len(X)):
+
+        x = X[i]
+
+        t = T[i]
+
+
+
+        y = bipolar_step(np.dot(w, x) + b)
+
+        e = t - y
+
+
+
+        w += lr * e * x
+
+        b += lr * e
+
+
+
+        total_error += abs(e)
+
+
+
+    errors.append(total_error)
+
+
+
+# --------- PLOTTING ---------
+
+
+
+# Convergence curve
+
+plt.plot(errors)
+
+plt.xlabel("Epoch")
+
+plt.ylabel("Total Error")
+
+plt.title("Perceptron Convergence Curve")
+
+plt.show()
+
+
+
+# Decision boundary
+
+xmin, xmax = -2, 2
+
+ymin, ymax = -2, 2
+
+
+
+xx = np.linspace(xmin, xmax, 100)
+
+yy = -(w[0] * xx + b) / w[1]
+
+
+
+plt.scatter(X[:, 0], X[:, 1], c=T)
+
+plt.plot(xx, yy)
+
+plt.xlim(xmin, xmax)
+
+plt.ylim(ymin, ymax)
+
+plt.title("Decision Boundary")
+
+plt.xlabel("x₁")
+
+plt.ylabel("x₂")
+
+plt.show()
